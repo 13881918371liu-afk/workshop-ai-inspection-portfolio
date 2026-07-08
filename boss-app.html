@@ -621,39 +621,39 @@
             <div class="top-line">
               <div>
                 <div class="eyebrow">四川图径生物 · 2026/07/08</div>
-                <h1>今日工厂态势</h1>
+                <h1>问题与突破</h1>
               </div>
               <div class="sync-pill"><span class="sync-dot"></span>已同步</div>
             </div>
 
             <section class="ai-brief">
               <div class="brief-title">
-                <strong>AI 今日摘要</strong>
+                <strong>AI 今日重点</strong>
                 <span>基于 5 个车间记录</span>
               </div>
-              <p>今天重点看 3 件事：供虫车间旧杯旧盖空杯风险、浸染车间 B 组病虫反馈、巡检车间有 2 条记录未闭环。</p>
+              <p>今天重点看 2 类事：厂里有哪些问题需要处理，现场有哪些突破值得复盘推广。产量数据放在二级页面即可。</p>
             </section>
 
             <div class="metrics">
               <div class="metric red">
-                <label>今日异常</label>
+                <label>今日问题</label>
                 <strong>7</strong>
                 <small>较昨日 +2</small>
               </div>
               <div class="metric amber">
-                <label>待拍板</label>
+                <label>需拍板</label>
                 <strong>3</strong>
                 <small>需要老板确认</small>
               </div>
               <div class="metric green">
-                <label>抽查合格率</label>
-                <strong>99.91%</strong>
-                <small>最低来自浸染车间</small>
+                <label>今日突破</label>
+                <strong>2</strong>
+                <small>可复盘推广</small>
               </div>
               <div class="metric blue">
-                <label>数据准时率</label>
-                <strong>92%</strong>
-                <small>2 个班组延迟</small>
+                <label>信息延迟</label>
+                <strong>2</strong>
+                <small>班组未及时闭环</small>
               </div>
             </div>
 
@@ -683,6 +683,23 @@
                 <div class="chips">
                   <span class="chip">浸染车间</span>
                   <span class="chip">质量</span>
+                </div>
+              </div>
+            </article>
+
+            <div class="section-head">
+              <h2>今日突破</h2>
+              <span>可复制经验</span>
+            </div>
+
+            <article class="decision">
+              <div class="decision-mark" style="background: var(--green);"></div>
+              <div>
+                <h3>供虫车间空杯识别提前</h3>
+                <p>主任在晨会中提前指出旧杯旧盖风险，避免问题进入后续批次；建议沉淀为物料复查规则。</p>
+                <div class="chips">
+                  <span class="chip">供虫车间</span>
+                  <span class="chip">流程优化</span>
                 </div>
               </div>
             </article>
@@ -728,7 +745,7 @@
           <div class="tabbar">
             <div class="tabs">
               <div class="tab active">态势</div>
-              <div class="tab">异常</div>
+              <div class="tab">问题</div>
               <div class="tab">车间</div>
             </div>
             <div class="ai-button">AI</div>
@@ -738,13 +755,13 @@
 
       <div class="copy">
         <div class="label">先做老板端，是为了把系统价值讲清楚</div>
-        <h2>老板打开后，不看流水账，只看今天哪里需要处理。</h2>
-        <p class="lead">这个界面不是替代飞书，而是把飞书里的车间数据、异常事件、处理状态和 AI 问答重新组织成老板能快速判断的管理视图。底层仍然可以先用飞书多维表格跑通，前端逐步升级成独立 App。</p>
+        <h2>老板每天最关心两件事：厂里有啥问题，有啥突破。</h2>
+        <p class="lead">这个界面不是替代飞书，也不是每天汇报产了多少。它把飞书里的车间记录、异常事件、处理状态和现场突破重新组织成老板能快速判断的管理视图：哪里要处理，哪里值得复盘推广。</p>
 
         <div class="panel-grid">
           <section class="panel">
-            <h3>核心视角：异常优先</h3>
-            <p>老板不需要每天看 100 项正常结果。首页默认只显示异常、待拍板、延迟、重复问题和风险趋势。</p>
+            <h3>核心视角：问题 + 突破</h3>
+            <p>老板不需要每天看 100 项正常结果，也不一定最先看产量。首页默认显示问题、待拍板、延迟、重复风险和可复制突破。</p>
           </section>
           <section class="panel">
             <h3>AI 入口：先回答，再确认</h3>
@@ -752,7 +769,7 @@
           </section>
           <section class="panel">
             <h3>数据底座：先飞书，后中台</h3>
-            <p>第一版把飞书当数据库和看板工具，等流程稳定后再把关键表迁到自有后端，App 只通过统一接口读写。</p>
+            <p>第一版把飞书当数据库和看板工具，问题和突破都沉淀为结构化记录；等流程稳定后再把关键表迁到自有后端。</p>
           </section>
           <section class="panel">
             <h3>体验方向：精致但不花哨</h3>
@@ -775,7 +792,7 @@
           </div>
           <div class="flow-step">
             <strong>4. 老板端聚合</strong>
-            <span>只展示异常、趋势、待拍板和可追溯来源。</span>
+            <span>只展示问题、突破、待拍板和可追溯来源。</span>
           </div>
           <div class="flow-step">
             <strong>5. 处理闭环</strong>
