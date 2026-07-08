@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>车间AI巡检系统员工端与老板端交互设计</title>
+  <style>
+    :root {
+      --ink: #182236;
+      --muted: #61708a;
+      --line: #d8e0ea;
+      --bg: #f5f7fa;
+      --paper: #ffffff;
+      --green: #257457;
+      --green-bg: #e9f6ef;
+      --blue: #2f61a6;
+      --blue-bg: #eaf1fb;
+      --amber: #9a5b10;
+      --amber-bg: #fff3de;
+      --red: #aa3d3d;
+      --red-bg: #fdecec;
+      --violet: #5b56a7;
+      --violet-bg: #efeffb;
+      --shadow: 0 18px 42px rgba(31, 45, 71, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: min(1240px, calc(100vw - 48px));
+      margin: 28px auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 30px;
+      line-height: 1.18;
+      margin: 0 0 8px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 15px;
+      margin: 0;
+      max-width: 780px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .section-title {
+      margin: 26px 0 12px;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .three-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .panel h2,
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .panel ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .panel li {
+      margin: 5px 0;
+    }
+
+    .green {
+      background: var(--green-bg);
+      border-color: #b9dfce;
+    }
+
+    .blue {
+      background: var(--blue-bg);
+      border-color: #bdd0ef;
+    }
+
+    .amber {
+      background: var(--amber-bg);
+      border-color: #efd1a5;
+    }
+
+    .red {
+      background: var(--red-bg);
+      border-color: #efbcbc;
+    }
+
+    .violet {
+      background: var(--violet-bg);
+      border-color: #cdcbef;
+    }
+
+    .phone-wrap {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .phone {
+      width: 330px;
+      border: 2px solid #243047;
+      border-radius: 26px;
+      background: #101827;
+      padding: 14px;
+      box-shadow: 0 14px 34px rgba(16, 24, 39, 0.22);
+    }
+
+    .screen {
+      background: #f8fafc;
+      border-radius: 18px;
+      min-height: 610px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #5c6a80;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .screen-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 0 0 4px;
+    }
+
+    .screen-subtitle {
+      font-size: 12px;
+      color: #6c7a91;
+      margin-bottom: 14px;
+    }
+
+    .big-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 58px;
+      background: #fff;
+      padding: 12px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .big-button span {
+      display: block;
+      font-size: 12px;
+      color: #728098;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .button-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .mark-green {
+      background: var(--green);
+    }
+
+    .mark-blue {
+      background: var(--blue);
+    }
+
+    .mark-amber {
+      background: var(--amber);
+    }
+
+    .mark-red {
+      background: var(--red);
+    }
+
+    .input-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      margin-top: 14px;
+    }
+
+    .input-box strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .voice {
+      min-height: 86px;
+      border: 1px dashed #b8c3d3;
+      border-radius: 8px;
+      color: #728098;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13px;
+      padding: 10px;
+      background: #fbfcfe;
+    }
+
+    .submit {
+      margin-top: 12px;
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      min-height: 42px;
+      background: var(--green);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--blue-bg);
+      color: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .flow-item strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 3px;
+    }
+
+    .flow-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dashboard {
+      border: 1px solid #273349;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #111827;
+      box-shadow: 0 14px 34px rgba(16, 24, 39, 0.16);
+    }
+
+    .dash-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .dash-top strong {
+      font-size: 18px;
+    }
+
+    .dash-body {
+      background: #f8fafc;
+      padding: 14px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      min-height: 78px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 4px;
+    }
+
+    .issue-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .issue {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .issue strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .issue span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      border-radius: 7px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .qa {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .qa input {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .qa button {
+      border: 0;
+      border-radius: 8px;
+      padding: 0 14px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .schema {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .table-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .table-card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .fields {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .field {
+      border-radius: 6px;
+      background: #eef2f6;
+      color: #4e5e75;
+      padding: 4px 7px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .note {
+      margin-top: 16px;
+      border-left: 4px solid var(--green);
+      background: #f4fbf7;
+      padding: 12px 14px;
+      color: #385646;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1080px) {
+      header,
+      .three-column,
+      .two-column,
+      .phone-wrap,
+      .schema {
+        grid-template-columns: 1fr;
+      }
+
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        width: min(100vw - 24px, 720px);
+        padding: 20px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .issue {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        margin: 0;
+        border: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <h1>员工端、老板端与飞书数据层交互设计</h1>
+        <p class="subtitle">第一版目标不是做复杂 App，而是用最简单的入口把现场信息收上来，再由 AI 和飞书把它整理成异常、批次、统计和管理层看板。</p>
+      </div>
+      <div class="tag">细化版交互草图</div>
+    </header>
+
+    <section>
+      <h2 class="section-title">一、三个角色怎么分工</h2>
+      <div class="three-column">
+        <div class="panel green">
+          <h2>员工 / 主任</h2>
+          <ul>
+            <li>只负责输入现场事实</li>
+            <li>用大按钮进入对应场景</li>
+            <li>能说话就不手写</li>
+            <li>异常比正常更容易上报</li>
+          </ul>
+        </div>
+        <div class="panel amber">
+          <h2>飞书多维表格</h2>
+          <ul>
+            <li>承接所有结构化数据</li>
+            <li>关联车间、人员和批次</li>
+            <li>自动计算合格率和状态</li>
+            <li>保留原始记录方便追溯</li>
+          </ul>
+        </div>
+        <div class="panel red">
+          <h2>老板 / 管理层</h2>
+          <ul>
+            <li>默认只看异常和趋势</li>
+            <li>能追溯到来源记录</li>
+            <li>能问 AI 临时问题</li>
+            <li>需要处理的事情自动冒出来</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">二、员工端：第一版手机入口</h2>
+      <div class="phone-wrap">
+        <div class="phone" aria-label="员工端手机界面草图">
+          <div class="screen">
+            <div class="status">
+              <span>09:18</span>
+              <span>车间助手</span>
+            </div>
+            <div class="screen-title">今天要记录什么？</div>
+            <div class="screen-subtitle">先选场景，再说话或简单填写</div>
+
+            <button class="big-button">
+              <div>晨会纪要<span>昨日复盘、今日任务、物料确认</span></div>
+              <div class="button-mark mark-green">会</div>
+            </button>
+            <button class="big-button">
+              <div>员工反馈<span>员工临时发现的问题</span></div>
+              <div class="button-mark mark-blue">反</div>
+            </button>
+            <button class="big-button">
+              <div>现场物料巡查<span>合格一键确认，异常单独说</span></div>
+              <div class="button-mark mark-amber">料</div>
+            </button>
+            <button class="big-button">
+              <div>操作过程巡查<span>组别、样号、抽查结果</span></div>
+              <div class="button-mark mark-blue">巡</div>
+            </button>
+            <button class="big-button">
+              <div>异常拍照上报<span>拍图 + 说一句说明</span></div>
+              <div class="button-mark mark-red">异</div>
+            </button>
+
+            <div class="input-box">
+              <strong>说一句现场情况</strong>
+              <div class="voice">按手机键盘语音输入，或后续升级为按住说话</div>
+              <button class="submit">提交并让 AI 整理</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flow-list">
+          <div class="flow-item">
+            <div class="number">1</div>
+            <div>
+              <strong>打开入口</strong>
+              <span>可以是飞书表单、手机桌面快捷方式、飞书群机器人按钮。第一版优先用飞书现成入口。</span>
+            </div>
+          </div>
+          <div class="flow-item">
+            <div class="number">2</div>
+            <div>
+              <strong>选择场景</strong>
+              <span>员工不需要看复杂表格，只选择“晨会、反馈、物料、巡查、异常拍照”等少数入口。</span>
+            </div>
+          </div>
+          <div class="flow-item">
+            <div class="number">3</div>
+            <div>
+              <strong>说话或简单填写</strong>
+              <span>第一版用手机自带语音输入转文字；后续再做真正的按住说话和自动转写。</span>
+            </div>
+          </div>
+          <div class="flow-item">
+            <div class="number">4</div>
+            <div>
+              <strong>AI 生成结构化结果</strong>
+              <span>把“杯子坏了、B组7-3有病虫”翻译成标准字段、异常类型、批次和数量。</span>
+            </div>
+          </div>
+          <div class="flow-item">
+            <div class="number">5</div>
+            <div>
+              <strong>主任确认后入库</strong>
+              <span>高风险内容不直接变成正式记录，先显示 AI 整理结果，让主任点确认或修改。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">三、员工端几个典型交互</h2>
+      <div class="three-column">
+        <div class="panel">
+          <h3>晨会纪要</h3>
+          <p>主任说一整段话，AI 自动拆成昨日复盘、今日生产任务、工艺与质量重点、物料确认、补充项、员工反馈。</p>
+        </div>
+        <div class="panel">
+          <h3>现场物料</h3>
+          <p>主任说“现场物料今天合格”，系统默认该类检查项全合格；若某项异常，只补充异常原因。</p>
+        </div>
+        <div class="panel">
+          <h3>临时反馈</h3>
+          <p>员工说“这个杯盖盖不严”，AI 根据车间知识库补全成杯体/杯盖异常，并进入员工反馈和异常事件。</p>
+        </div>
+      </div>
+      <div class="note">员工端的设计原则：能默认的就默认，能选择的就少打字，能说话的就不写长文，异常一定要容易上报。</div>
+    </section>
+
+    <section>
+      <h2 class="section-title">四、老板端：看板 + 问答</h2>
+      <div class="dashboard" aria-label="老板端看板草图">
+        <div class="dash-top">
+          <strong>今日生产异常看板</strong>
+          <span>2026-07-07</span>
+        </div>
+        <div class="dash-body">
+          <div class="metrics">
+            <div class="metric">
+              <span>今日异常</span>
+              <strong>6</strong>
+            </div>
+            <div class="metric">
+              <span>未处理</span>
+              <strong>3</strong>
+            </div>
+            <div class="metric">
+              <span>最低合格率</span>
+              <strong>99.86%</strong>
+            </div>
+            <div class="metric">
+              <span>重复问题</span>
+              <strong>2</strong>
+            </div>
+          </div>
+          <div class="issue-list">
+            <div class="issue">
+              <div>
+                <strong>供虫车间：旧杯旧盖盖不严，存在空杯风险</strong>
+                <span>来源：晨会纪要 / 物料确认 / 负责人：纪丽</span>
+              </div>
+              <div class="badge">待处理</div>
+            </div>
+            <div class="issue">
+              <div>
+                <strong>浸染车间：B组 7-3 发现病虫 1 个</strong>
+                <span>来源：生产过程巡查 / 抽查样本 1200 / 合格 1199</span>
+              </div>
+              <div class="badge">待复查</div>
+            </div>
+            <div class="issue">
+              <div>
+                <strong>物料残留：旧杯旧盖未清洗，有废土、饲料、霉粉残留</strong>
+                <span>来源：今日工作安排 / 影响环节：物料使用前检查</span>
+              </div>
+              <div class="badge">处理中</div>
+            </div>
+          </div>
+          <div class="qa">
+            <input value="最近一周空杯问题是不是变多了？" aria-label="老板问答输入示例">
+            <button>问 AI</button>
+          </div>
+        </div>
+      </div>
+      <div class="two-column" style="margin-top: 16px;">
+        <div class="panel blue">
+          <h3>固定看板</h3>
+          <ul>
+            <li>今日异常</li>
+            <li>未处理异常</li>
+            <li>按车间统计</li>
+            <li>合格率趋势</li>
+            <li>重复出现的问题</li>
+          </ul>
+        </div>
+        <div class="panel violet">
+          <h3>AI 问答</h3>
+          <ul>
+            <li>最近一周哪个车间问题最多？</li>
+            <li>旧杯旧盖导致了哪些问题？</li>
+            <li>哪个批次需要重点复查？</li>
+            <li>今天有哪些事情需要我拍板？</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">五、飞书数据层怎么承接</h2>
+      <div class="schema">
+        <div class="table-card">
+          <h3>晨会纪要表</h3>
+          <div class="fields">
+            <span class="field">日期</span>
+            <span class="field">车间</span>
+            <span class="field">主持人</span>
+            <span class="field">昨日复盘</span>
+            <span class="field">今日任务</span>
+            <span class="field">质量重点</span>
+            <span class="field">物料确认</span>
+            <span class="field">员工反馈</span>
+          </div>
+        </div>
+        <div class="table-card">
+          <h3>巡查记录表</h3>
+          <div class="fields">
+            <span class="field">日期</span>
+            <span class="field">巡查人</span>
+            <span class="field">车间</span>
+            <span class="field">检查类型</span>
+            <span class="field">组别</span>
+            <span class="field">样号</span>
+            <span class="field">抽查数</span>
+            <span class="field">合格数</span>
+            <span class="field">合格率</span>
+          </div>
+        </div>
+        <div class="table-card">
+          <h3>异常事件表</h3>
+          <div class="fields">
+            <span class="field">日期</span>
+            <span class="field">车间</span>
+            <span class="field">异常类型</span>
+            <span class="field">批次</span>
+            <span class="field">数量</span>
+            <span class="field">严重程度</span>
+            <span class="field">负责人</span>
+            <span class="field">处理状态</span>
+            <span class="field">来源记录</span>
+          </div>
+        </div>
+        <div class="table-card">
+          <h3>车间知识库</h3>
+          <div class="fields">
+            <span class="field">车间</span>
+            <span class="field">俗称</span>
+            <span class="field">标准名</span>
+            <span class="field">规格</span>
+            <span class="field">常见异常</span>
+            <span class="field">归类规则</span>
+          </div>
+        </div>
+        <div class="table-card">
+          <h3>批次表</h3>
+          <div class="fields">
+            <span class="field">批次号</span>
+            <span class="field">车间</span>
+            <span class="field">日期</span>
+            <span class="field">物料</span>
+            <span class="field">操作人</span>
+            <span class="field">巡查记录</span>
+            <span class="field">异常记录</span>
+          </div>
+        </div>
+        <div class="table-card">
+          <h3>处理跟进表</h3>
+          <div class="fields">
+            <span class="field">异常事件</span>
+            <span class="field">责任人</span>
+            <span class="field">处理动作</span>
+            <span class="field">截止时间</span>
+            <span class="field">复查人</span>
+            <span class="field">复查结果</span>
+          </div>
+        </div>
+      </div>
+      <div class="note">飞书这一层的重点是“原始记录不丢、标准字段能算、异常能汇总、批次能追溯”。员工端可以很简单，但数据层必须设计清楚。</div>
+    </section>
+
+    <section>
+      <h2 class="section-title">六、第一版建议怎么落地</h2>
+      <div class="two-column">
+        <div class="panel green">
+          <h3>先做</h3>
+          <ul>
+            <li>飞书表单入口</li>
+            <li>手机自带语音输入</li>
+            <li>晨会纪要 AI 整理</li>
+            <li>员工反馈异常归类</li>
+            <li>老板异常看板</li>
+          </ul>
+        </div>
+        <div class="panel red">
+          <h3>后做</h3>
+          <ul>
+            <li>独立 App</li>
+            <li>真正按住说话</li>
+            <li>全自动无确认入库</li>
+            <li>全车间一次性上线</li>
+            <li>复杂权限和私有化部署</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
