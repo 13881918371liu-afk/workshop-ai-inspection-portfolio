@@ -413,6 +413,45 @@
       font-weight: 700;
     }
 
+    .feature-link {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid #bdd0f1;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 18px 0 6px;
+      background: #eef5ff;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .feature-link strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .feature-link span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .feature-link b {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--slate);
+      color: #fff;
+      font-size: 20px;
+    }
+
     .note {
       margin-top: 16px;
       border-left: 4px solid var(--green);
@@ -607,10 +646,18 @@
 
       <section>
         <h2 class="section-title">后续可查看资料</h2>
+        <a class="feature-link" href="./boss-app.html">
+          <div>
+            <strong>先看老板端 App 原型</strong>
+            <span>展示张老板打开手机后看到的异常看板、AI 问答和待拍板事项。</span>
+          </div>
+          <b>→</b>
+        </a>
         <div class="grid-2">
           <div class="card">
             <h3>当前已有材料</h3>
             <ul>
+              <li>老板端 App 原型</li>
               <li>总体架构图</li>
               <li>员工端与老板端交互草图</li>
               <li>样表信息提取与实现思路</li>
@@ -628,6 +675,7 @@
           </div>
         </div>
         <div class="links">
+          <a class="link-card" href="./boss-app.html">打开老板端 App 原型</a>
           <a class="link-card" href="./architecture.html">打开总体架构图</a>
           <a class="link-card" href="./sample-analysis.md">打开样表分析文档</a>
         </div>

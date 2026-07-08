@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>老板端 App 原型｜车间 AI 巡检系统</title>
+  <style>
+    :root {
+      --ink: #182033;
+      --muted: #647086;
+      --soft: #eef2f6;
+      --line: rgba(42, 55, 82, 0.14);
+      --paper: #ffffff;
+      --field: #f7f9fb;
+      --green: #2f8063;
+      --green-soft: #e8f4ef;
+      --blue: #2d67a8;
+      --blue-soft: #e9f1fb;
+      --amber: #a66618;
+      --amber-soft: #fff2dc;
+      --red: #b44442;
+      --red-soft: #fdecec;
+      --violet: #6356a2;
+      --shadow: 0 18px 44px rgba(35, 45, 68, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(47, 128, 99, 0.16), transparent 24%),
+        radial-gradient(circle at 85% 20%, rgba(166, 102, 24, 0.14), transparent 25%),
+        linear-gradient(135deg, #f7f8f5 0%, #eef3f7 48%, #f8f6f0 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(1220px, calc(100vw - 48px));
+      margin: 26px auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 11px;
+      background: rgba(255, 255, 255, 0.62);
+      text-decoration: none;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .phone-shell {
+      width: min(100%, 390px);
+      margin: 0 auto;
+      border-radius: 42px;
+      padding: 12px;
+      background: #111827;
+      box-shadow: 0 28px 60px rgba(15, 23, 42, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .phone-screen {
+      position: relative;
+      height: 812px;
+      overflow: hidden;
+      border-radius: 32px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 249, 250, 0.95)),
+        url("https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .screen-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(248, 250, 252, 0.88), rgba(248, 250, 252, 0.98) 38%, rgba(248, 250, 252, 0.96));
+    }
+
+    .status-bar {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 22px 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(24, 32, 51, 0.82);
+    }
+
+    .app-content {
+      position: relative;
+      z-index: 1;
+      padding: 16px 18px 92px;
+    }
+
+    .top-line {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 4px 0 0;
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .sync-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 0 0 auto;
+      min-height: 32px;
+      border-radius: 16px;
+      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 18px rgba(33, 45, 66, 0.09);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      backdrop-filter: blur(18px);
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .ai-brief {
+      margin-top: 14px;
+      min-height: 104px;
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      border-radius: 22px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+    }
+
+    .brief-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .brief-title span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .ai-brief p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      color: #273247;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      min-height: 82px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 12px;
+      background: var(--paper);
+      box-shadow: 0 10px 22px rgba(33, 45, 66, 0.06);
+    }
+
+    .metric label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 23px;
+      line-height: 1.05;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .red {
+      color: var(--red);
+      background: var(--red-soft);
+      border-color: rgba(180, 68, 66, 0.18);
+    }
+
+    .amber {
+      color: var(--amber);
+      background: var(--amber-soft);
+      border-color: rgba(166, 102, 24, 0.18);
+    }
+
+    .green {
+      color: var(--green);
+      background: var(--green-soft);
+      border-color: rgba(47, 128, 99, 0.16);
+    }
+
+    .blue {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-color: rgba(45, 103, 168, 0.16);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 15px 0 8px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .section-head a,
+    .section-head span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 5px 1fr;
+      gap: 10px;
+      min-height: 74px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 12px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(33, 45, 66, 0.06);
+      margin-bottom: 8px;
+    }
+
+    .decision-mark {
+      border-radius: 999px;
+      background: var(--red);
+    }
+
+    .decision h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .decision p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 14px;
+      padding: 5px 9px;
+      background: var(--field);
+      color: #344054;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .workshops {
+      display: grid;
+      gap: 7px;
+    }
+
+    .workshop-row {
+      display: grid;
+      grid-template-columns: 74px 1fr 46px;
+      align-items: center;
+      gap: 9px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 7px 10px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bar {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e5e9ef;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+    }
+
+    .bar.warning span {
+      background: var(--amber);
+    }
+
+    .bar.danger span {
+      background: var(--red);
+    }
+
+    .tabbar {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 16px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 62px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tabs {
+      grid-column: 1 / 4;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      min-height: 56px;
+      border-radius: 28px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 22px;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .tab.active {
+      background: #182033;
+      color: #fff;
+    }
+
+    .ai-button {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      font-weight: 950;
+      color: var(--ink);
+    }
+
+    .chat-sheet {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 88px;
+      z-index: 3;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: 24px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.84);
+      box-shadow: 0 22px 54px rgba(25, 35, 54, 0.18);
+      backdrop-filter: blur(24px);
+    }
+
+    .chat-q {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .chat-a {
+      margin-top: 7px;
+      font-size: 13px;
+      color: #273247;
+    }
+
+    .confirm-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      margin-top: 10px;
+      min-height: 38px;
+      border-radius: 14px;
+      padding: 8px 10px;
+      background: #f5f7fa;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .confirm-line button {
+      border: 0;
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: var(--ink);
+      color: #fff;
+      font: inherit;
+      cursor: default;
+    }
+
+    .copy {
+      padding: 10px 0;
+    }
+
+    .label {
+      display: inline-flex;
+      min-height: 32px;
+      align-items: center;
+      border-radius: 8px;
+      padding: 6px 10px;
+      background: rgba(47, 128, 99, 0.11);
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .copy h2 {
+      margin: 0;
+      max-width: 680px;
+      font-size: 40px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 16px 0 0;
+      max-width: 710px;
+      color: #40506a;
+      font-size: 17px;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .panel {
+      min-height: 156px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 12px 28px rgba(35, 45, 68, 0.08);
+    }
+
+    .panel h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .flow {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .flow-step {
+      min-height: 118px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .flow-step strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .flow-step span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .panel-grid,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .copy h2 {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100vw - 22px, 520px);
+      }
+
+      .phone-shell {
+        border-radius: 30px;
+        padding: 8px;
+      }
+
+      .phone-screen {
+        height: 760px;
+        border-radius: 24px;
+      }
+
+      .copy h2 {
+        font-size: 29px;
+      }
+
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="nav">
+      <a class="back" href="./index.html">返回作品集首页</a>
+      <span>老板端 App 原型 · 第一版界面方向</span>
+    </nav>
+
+    <section class="hero">
+      <div class="phone-shell" aria-label="老板端 App 手机界面预览">
+        <div class="phone-screen">
+          <div class="screen-overlay"></div>
+          <div class="status-bar">
+            <span>09:41</span>
+            <span>5G  86%</span>
+          </div>
+
+          <div class="app-content">
+            <div class="top-line">
+              <div>
+                <div class="eyebrow">四川图径生物 · 2026/07/08</div>
+                <h1>今日工厂态势</h1>
+              </div>
+              <div class="sync-pill"><span class="sync-dot"></span>已同步</div>
+            </div>
+
+            <section class="ai-brief">
+              <div class="brief-title">
+                <strong>AI 今日摘要</strong>
+                <span>基于 5 个车间记录</span>
+              </div>
+              <p>今天重点看 3 件事：供虫车间旧杯旧盖空杯风险、浸染车间 B 组病虫反馈、巡检车间有 2 条记录未闭环。</p>
+            </section>
+
+            <div class="metrics">
+              <div class="metric red">
+                <label>今日异常</label>
+                <strong>7</strong>
+                <small>较昨日 +2</small>
+              </div>
+              <div class="metric amber">
+                <label>待拍板</label>
+                <strong>3</strong>
+                <small>需要老板确认</small>
+              </div>
+              <div class="metric green">
+                <label>抽查合格率</label>
+                <strong>99.91%</strong>
+                <small>最低来自浸染车间</small>
+              </div>
+              <div class="metric blue">
+                <label>数据准时率</label>
+                <strong>92%</strong>
+                <small>2 个班组延迟</small>
+              </div>
+            </div>
+
+            <div class="section-head">
+              <h2>需要我拍板</h2>
+              <a href="#">全部</a>
+            </div>
+
+            <article class="decision">
+              <div class="decision-mark"></div>
+              <div>
+                <h3>旧杯旧盖是否继续使用？</h3>
+                <p>供虫车间反馈盖不严，可能导致空杯；AI 建议先限制使用并补充清洗记录。</p>
+                <div class="chips">
+                  <span class="chip">供虫车间</span>
+                  <span class="chip">物料</span>
+                  <span class="chip">高优先级</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="decision">
+              <div class="decision-mark" style="background: var(--amber);"></div>
+              <div>
+                <h3>B 组病虫是否扩大复查？</h3>
+                <p>浸染车间抽查 1200 个，发现病虫 1 个；建议复查相邻组别。</p>
+                <div class="chips">
+                  <span class="chip">浸染车间</span>
+                  <span class="chip">质量</span>
+                </div>
+              </div>
+            </article>
+
+            <div class="section-head">
+              <h2>五个车间概览</h2>
+              <span>只显示风险</span>
+            </div>
+
+            <div class="workshops">
+              <div class="workshop-row">
+                <span>供虫</span>
+                <div class="bar danger"><span style="width: 68%;"></span></div>
+                <span>3 项</span>
+              </div>
+              <div class="workshop-row">
+                <span>浸染</span>
+                <div class="bar warning"><span style="width: 46%;"></span></div>
+                <span>2 项</span>
+              </div>
+              <div class="workshop-row">
+                <span>巡检</span>
+                <div class="bar warning"><span style="width: 32%;"></span></div>
+                <span>2 项</span>
+              </div>
+              <div class="workshop-row">
+                <span>成品</span>
+                <div class="bar"><span style="width: 8%;"></span></div>
+                <span>0 项</span>
+              </div>
+            </div>
+          </div>
+
+          <section class="chat-sheet" aria-label="AI 问答示例">
+            <div class="chat-q">老板问：最近空杯问题主要来自哪里？</div>
+            <div class="chat-a">AI：近 7 天空杯相关记录集中在供虫车间旧杯旧盖，来源包括晨会纪要和员工反馈，共 5 条。</div>
+            <div class="confirm-line">
+              <span>生成一条复查任务给供虫车间主任？</span>
+              <button>确认</button>
+            </div>
+          </section>
+
+          <div class="tabbar">
+            <div class="tabs">
+              <div class="tab active">态势</div>
+              <div class="tab">异常</div>
+              <div class="tab">车间</div>
+            </div>
+            <div class="ai-button">AI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy">
+        <div class="label">先做老板端，是为了把系统价值讲清楚</div>
+        <h2>老板打开后，不看流水账，只看今天哪里需要处理。</h2>
+        <p class="lead">这个界面不是替代飞书，而是把飞书里的车间数据、异常事件、处理状态和 AI 问答重新组织成老板能快速判断的管理视图。底层仍然可以先用飞书多维表格跑通，前端逐步升级成独立 App。</p>
+
+        <div class="panel-grid">
+          <section class="panel">
+            <h3>核心视角：异常优先</h3>
+            <p>老板不需要每天看 100 项正常结果。首页默认只显示异常、待拍板、延迟、重复问题和风险趋势。</p>
+          </section>
+          <section class="panel">
+            <h3>AI 入口：先回答，再确认</h3>
+            <p>AI 可以解释“为什么异常变多了”，但涉及派单、改状态、通知人员时，先给确认卡，避免误操作。</p>
+          </section>
+          <section class="panel">
+            <h3>数据底座：先飞书，后中台</h3>
+            <p>第一版把飞书当数据库和看板工具，等流程稳定后再把关键表迁到自有后端，App 只通过统一接口读写。</p>
+          </section>
+          <section class="panel">
+            <h3>体验方向：精致但不花哨</h3>
+            <p>风格借鉴 iOS 的悬浮控制层：信息区保持清楚，AI 按钮和底部导航轻量浮在内容之上。</p>
+          </section>
+        </div>
+
+        <div class="flow">
+          <div class="flow-step">
+            <strong>1. 员工/主任上报</strong>
+            <span>晨会、巡检、员工反馈进入表单或语音入口。</span>
+          </div>
+          <div class="flow-step">
+            <strong>2. AI 结构化</strong>
+            <span>把口语拆成车间、物料、异常、负责人、严重程度。</span>
+          </div>
+          <div class="flow-step">
+            <strong>3. 飞书沉淀</strong>
+            <span>记录进入多维表格，形成异常事件和处理跟进。</span>
+          </div>
+          <div class="flow-step">
+            <strong>4. 老板端聚合</strong>
+            <span>只展示异常、趋势、待拍板和可追溯来源。</span>
+          </div>
+          <div class="flow-step">
+            <strong>5. 处理闭环</strong>
+            <span>确认、派单、复查、关闭，形成长期管理数据。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
